@@ -1,13 +1,11 @@
 # This is a basic workflow to help you get started with Actions
 
-name: CI
+name: Bootcamp 2020 Project 02
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
   push:
-    branches: [ master ]
-  pull_request:
     branches: [ master ]
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
@@ -23,11 +21,22 @@ jobs:
     - uses: actions/checkout@v2
 
     # Runs a single command using the runners shell
-    - name: Run a one-line script
-      run: echo Hello, world!
-
-    # Runs a set of commands using the runners shell
-    - name: Run a multi-line script
-      run: |
-        echo Add other actions to build,
-        echo test, and deploy your project.
+    - name: Setup Node.js Environment
+      uses: actions/setup-node@v2-beta
+      with:
+        node-version: 12 
+    
+    - name: GitHub Action for Yarn or npm
+      uses: Borales/actions-yarn@v2.1.0
+      with:
+        #Yarn Command
+        cmd: install #yarn install or npm install
+    
+    - name: Creating Build
+      run: yarn build #yarn build or npm run-script build
+      
+    - name: Installing Surge
+      run: npm install -g surge
+      
+    - name: Deploying on Surge
+      run: surge ./build http://covidapp.surge.sh/ --token ${{secrets.SURGE_TOKEN}}
